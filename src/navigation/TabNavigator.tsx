@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { GroupsTab } from '../components/tabs/GroupsTab';
+import { BalanceTab } from '../components/tabs/BalanceTab';
 import { StatisticsTab } from '../components/tabs/StatisticsTab';
 import { SettingsTab } from '../components/tabs/SettingsTab';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -27,7 +27,7 @@ export const TabNavigator = () => {
     >
       <Tab.Screen
         name="Balance"
-        component={GroupsTab}
+        component={BalanceTab}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Icon name="wallet" size={size} color={color} />

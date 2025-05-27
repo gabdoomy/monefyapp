@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, ScrollView, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import { colors } from '../theme/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StyleSheet } from 'react-native';
+import { useData } from '../context/DataContext';
 
 interface Transaction {
   id: string;
@@ -18,7 +19,6 @@ interface TransactionDetailsProps {
     params: {
       id: string;
       name: string;
-      type: 'group' | 'person';
       avatar?: string;
     };
   };
@@ -51,35 +51,36 @@ const mockTransactions: Transaction[] = [
 
 export const TransactionDetails = ({ route, navigation }: TransactionDetailsProps) => {
   const { isDark } = useTheme();
+  const { currentUser } = useData();
   const theme = isDark ? colors.dark : colors.light;
-  const { name, type, avatar } = route.params;
+  const { name, avatar } = route.params;
   const [transactions, setTransactions] = useState<Transaction[]>(mockTransactions);
 
   const totalBalance = transactions.reduce((sum, t) => sum + t.amount, 0);
 
   const handleAddTransaction = () => {
-    // This would typically open a modal or navigate to a new screen
-    Alert.alert('Add Transaction', 'This would open a new transaction form');
+    navigation.navigate('AddExpense', {
+      preselectedParticipants: [
+        {
+          ...currentUser,
+          splitType: 'equal',
+          value: 1,
+          share: 0
+        },
+        {
+          id: route.params.id,
+          name: route.params.name,
+          avatar: route.params.avatar,
+          splitType: 'equal',
+          value: 1,
+          share: 0
+        }
+      ]
+    });
   };
 
   const handleDeleteTransaction = (transactionId: string) => {
-    Alert.alert(
-      'Delete Transaction',
-      'Are you sure you want to delete this transaction?',
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel'
-        },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            setTransactions(prev => prev.filter(t => t.id !== transactionId));
-          }
-        }
-      ]
-    );
+    setTransactions(prev => prev.filter(t => t.id !== transactionId));
   };
 
   const formatDate = (dateString: string) => {
@@ -93,7 +94,7 @@ export const TransactionDetails = ({ route, navigation }: TransactionDetailsProp
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* Header */}
+      {/* Integrated Header */}
       <View style={[styles.header, { backgroundColor: theme.surface }]}>
         <TouchableOpacity 
           style={styles.backButton}
@@ -110,7 +111,7 @@ export const TransactionDetails = ({ route, navigation }: TransactionDetailsProp
           <View style={styles.headerText}>
             <Text style={[styles.headerTitle, { color: theme.text }]}>{name}</Text>
             <Text style={[styles.headerSubtitle, { color: theme.secondaryText }]}>
-              {type === 'group' ? 'Group' : 'Person'}
+              Person
             </Text>
           </View>
         </View>
@@ -135,9 +136,7 @@ export const TransactionDetails = ({ route, navigation }: TransactionDetailsProp
       {/* Transactions List */}
       <View style={styles.transactionsContainer}>
         <View style={styles.transactionsHeader}>
-          <Text style={[styles.transactionsTitle, { color: theme.secondaryText }]}>
-            TRANSACTIONS
-          </Text>
+          <View style={{ flex: 1 }} />
           <TouchableOpacity 
             style={styles.addButton}
             onPress={handleAddTransaction}
@@ -195,15 +194,22 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
     paddingTop: 60,
     paddingBottom: 16,
+    paddingHorizontal: 16,
   },
   backButton: {
     marginRight: 16,
   },
   headerContent: {
     flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   headerText: {
@@ -215,13 +221,6 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     fontSize: 15,
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   balanceCard: {
     margin: 16,
@@ -248,14 +247,10 @@ const styles = StyleSheet.create({
   },
   transactionsHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'flex-end',
     paddingHorizontal: 16,
-    marginBottom: 8,
-  },
-  transactionsTitle: {
-    fontSize: 13,
-    fontWeight: '600',
+    paddingVertical: 8,
   },
   addButton: {
     padding: 4,
