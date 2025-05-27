@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   totalAmount: {
     fontSize: 34,
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   listItem: {
     marginHorizontal: 16,
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   },
   listItemAmount: {
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: '500',
   },
 });
 
