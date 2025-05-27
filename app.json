@@ -1,4 +1,14 @@
 {
   "name": "Monefy-native",
-  "slug": "Monefy-native"
+  "slug": "Monefy-native",
+  "expo": {
+    "name": "Monefy",
+    "slug": "monefy",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "web": {
+      "bundler": "metro"
+    }
+  }
 }
