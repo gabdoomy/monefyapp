@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   View,
   Text,
@@ -45,18 +45,20 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
 
   // Initialize with preselected participants if provided, otherwise just current user
   useEffect(() => {
+    const initialAmount = parseFloat(amount) || 0;
     if (route.params?.preselectedParticipants) {
       setParticipants(route.params.preselectedParticipants);
     } else {
+      
       const currentParticipant: Participant = {
         ...currentUser,
         splitType: selectedSplitType,
         value: 1,
-        share: parseFloat(amount) || 0
+        share: initialAmount
       };
       setParticipants([currentParticipant]);
     }
-  }, []); // Only run once on mount
+  }, [amount]); // Only run once on mount
 
   // Update all participants when split type changes
   useEffect(() => {
@@ -93,9 +95,9 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
     result.forEach(p => {
       p.value = Math.max(0, p.value); // Ensure no negative values
     });
-
     // Calculate shares based on split type
     switch (selectedSplitType) {
+      
       case 'amount':
         let remainingAmount = totalAmount;
         result.forEach(p => {
@@ -143,6 +145,10 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
           p.share = equalShare;
           p.value = 1; // Keep value as 1 for equal split
         });
+        // If only one participant, set share to total amount
+        if (result.length === 1) {
+          result[0].share = totalAmount;
+        }
         break;
     }
 
@@ -435,17 +441,18 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
               const parsedValue = Math.max(0, parseFloat(value) || 0);
               setAmount(parsedValue.toString());
               // Recalculate shares with the new amount
-              if (participants.length > 0) {
-                const updatedParticipants = participants.map(p => ({
+              
+              setParticipants(prevParticipants => {
+                const updatedParticipants = prevParticipants.map(p => ({
                   ...p,
                   value: selectedSplitType === 'equal' ? 1 :
                          selectedSplitType === 'percentage' ? p.value :
                          selectedSplitType === 'shares' ? p.value :
-                         parsedValue / participants.length
+                         parsedValue / prevParticipants.length
                 }));
                 const recalculatedParticipants = calculateShares(updatedParticipants);
-                setParticipants(recalculatedParticipants);
-              }
+                return recalculatedParticipants;
+              });
             }}
             keyboardType="numeric"
             placeholder="0.00"
@@ -801,4 +808,4 @@ const styles = StyleSheet.create({
     padding: 8,
     marginLeft: 8,
   },
-}); 
+});

@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../context/ThemeContext';
 import { colors } from '../../theme/colors';
 import { StyleSheet } from 'react-native';
+import styles from './styles/BalanceTab.styles';
 
 interface DebtItem {
   id: string;
@@ -99,7 +100,10 @@ export const BalanceTab = ({ navigation }: BalanceTabProps) => {
   return (
     <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>Balance</Text>
+        <View>
+          <Text style={[styles.title, { color: theme.text }]}>Monefy</Text>
+          <Text style={[styles.subtitle, { color: theme.secondaryText }]}>Your Finances, Simplified</Text>
+        </View>
         <TouchableOpacity
           style={styles.addButton}
           onPress={handleAddExpense}
@@ -124,80 +128,3 @@ export const BalanceTab = ({ navigation }: BalanceTabProps) => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-  },
-  title: {
-    fontSize: 34,
-    fontWeight: 'bold',
-  },
-  addButton: {
-    padding: 8,
-  },
-  totalCard: {
-    margin: 16,
-    padding: 20,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  totalLabel: {
-    fontSize: 13,
-    textTransform: 'uppercase',
-    marginBottom: 8,
-  },
-  totalAmount: {
-    fontSize: 34,
-    fontWeight: 'bold',
-  },
-  listItem: {
-    marginHorizontal: 16,
-    marginBottom: 12,
-    padding: 16,
-    borderRadius: 12,
-  },
-  listItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  listItemLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  listItemTextContainer: {
-    marginLeft: 12,
-    flex: 1,
-  },
-  listItemLabel: {
-    fontSize: 17,
-    fontWeight: '500',
-  },
-  listItemSubtitle: {
-    fontSize: 13,
-    marginTop: 2,
-  },
-  listItemRight: {
-    marginLeft: 12,
-  },
-  listItemAmount: {
-    fontSize: 17,
-    fontWeight: '600',
-  },
-}); 

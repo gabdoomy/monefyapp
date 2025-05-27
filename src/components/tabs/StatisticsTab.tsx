@@ -3,6 +3,7 @@ import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { colors } from '../../theme/colors';
 import { StyleSheet } from 'react-native';
+import styles from './styles/StatisticsTab.styles';
 
 export const StatisticsTab = () => {
   const { isDark } = useTheme();
@@ -23,31 +24,3 @@ export const StatisticsTab = () => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 34,
-    fontWeight: 'bold',
-    padding: 16,
-    paddingBottom: 8,
-  },
-  card: {
-    margin: 16,
-    padding: 20,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  cardTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  cardSubtitle: {
-    fontSize: 16,
-    textAlign: 'center',
-    lineHeight: 22,
-  },
-}); 
