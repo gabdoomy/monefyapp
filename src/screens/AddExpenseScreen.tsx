@@ -264,7 +264,8 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
       "howMuchEachParticipantNeedsToPay": howMuchEachParticipantNeedsToPay,
       "whoPaidTheTotalSum": payerId,
       "totalSumPaid": parseFloat(amount),
-      "description": description
+      "description": description,
+      "timestamp": Date.now()
     };
 
     fetch(`${API_HOSTNAME}/api/createTransaction`, {
