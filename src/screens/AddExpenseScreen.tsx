@@ -675,8 +675,12 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
                   item.id === payerId && styles.selectedItem
                 ]}
                 onPress={() => {
-                  setPayerId(item.id);
-                  setIsPayerModalVisible(false);
+                  try {
+                    setPayerId(item.id);
+                    setIsPayerModalVisible(false);
+                  } catch (error) {
+                    console.error("Error setting payer ID:", error);
+                  }
                 }}
               >
                 <View style={styles.participantInfo}>
