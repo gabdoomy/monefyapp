@@ -268,7 +268,7 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
       "timestamp": Date.now()
     };
 
-    fetch(`${API_HOSTNAME}/api/createTransaction`, {
+    fetch(`http://localhost:3000/api/createTransaction`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
