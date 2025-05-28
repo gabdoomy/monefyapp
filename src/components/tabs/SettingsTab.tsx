@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Switch, Text, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Switch, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../context/ThemeContext';
 import { styles } from './styles/SettingsTab.styles';
@@ -114,7 +114,7 @@ export const SettingsTab = () => {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <Text style={[styles.title, { color: theme.text }]}>
         Settings
       </Text>
@@ -130,6 +130,6 @@ export const SettingsTab = () => {
           </View>
         </View>
       ))}
-    </ScrollView>
+    </SafeAreaView>
   );
-}; 
+};

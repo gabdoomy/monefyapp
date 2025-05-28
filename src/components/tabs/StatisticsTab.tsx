@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, SafeAreaView } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { colors } from '../../theme/colors';
 import { StyleSheet } from 'react-native';
@@ -10,7 +10,7 @@ export const StatisticsTab = () => {
   const theme = isDark ? colors.dark : colors.light;
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
       <Text style={[styles.title, { color: theme.text }]}>Statistics</Text>
       
       <View style={[styles.card, { backgroundColor: theme.surface }]}>
@@ -21,6 +21,6 @@ export const StatisticsTab = () => {
           Expense tracking and analytics will be available in the next update
         </Text>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };

@@ -9,11 +9,13 @@ export const styles = StyleSheet.create({
     fontSize: 34,
     fontWeight: 'bold',
     textAlign: 'left',
-    marginBottom: 32,
+    marginBottom: 16,
     marginTop: 16,
+    paddingHorizontal: 16,
   },
   section: {
     marginBottom: 32,
+    margin: 16
   },
   sectionTitle: {
     fontSize: 13,

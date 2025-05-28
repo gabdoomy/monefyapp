@@ -6,6 +6,7 @@ import { colors } from '../../theme/colors';
 import { StyleSheet } from 'react-native';
 import styles from './styles/BalanceTab.styles';
 import { useDataContext } from '../../context/DataContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const API_HOSTNAME = 'https://monefy-server.vercel.app';
 
@@ -93,33 +94,35 @@ export const BalanceTab = ({ navigation }: BalanceTabProps) => {
   );
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
-      <View style={styles.header}>
-        <View>
-          <Text style={[styles.title, { color: theme.text }]}>Monefy</Text>
-          <Text style={[styles.subtitle, { color: theme.secondaryText }]}>Your Finances, Simplified</Text>
+    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+      <ScrollView>
+        <View style={styles.header}>
+          <View>
+            <Text style={[styles.title, { color: theme.text }]}>Monefy</Text>
+            <Text style={[styles.subtitle, { color: theme.secondaryText }]}>Your Finances, Simplified</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={handleAddExpense}
+          >
+            <Icon name="add-circle" size={24} color={colors.paleGreen} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={handleAddExpense}
-        >
-          <Icon name="add-circle" size={24} color={colors.paleGreen} />
-        </TouchableOpacity>
-      </View>
 
-      <View style={[styles.totalCard, { backgroundColor: theme.surface }]}>
-        <Text style={[styles.totalLabel, { color: theme.secondaryText }]}>
-          Total Balance
-        </Text>
-        <Text style={[
-          styles.totalAmount,
-          { color: totalBalance >= 0 ? colors.paleGreen : colors.error }
-        ]}>
-          {totalBalance >= 0 ? `+£${totalBalance.toFixed(2)}` : `-£${Math.abs(totalBalance).toFixed(2)}`}
-        </Text>
-      </View>
+        <View style={[styles.totalCard, { backgroundColor: theme.surface }]}>
+          <Text style={[styles.totalLabel, { color: theme.secondaryText }]}>
+            Total Balance
+          </Text>
+          <Text style={[
+            styles.totalAmount,
+            { color: totalBalance >= 0 ? colors.paleGreen : colors.error }
+          ]}>
+            {totalBalance >= 0 ? `+£${totalBalance.toFixed(2)}` : `-£${Math.abs(totalBalance).toFixed(2)}`}
+          </Text>
+        </View>
 
-      {balanceData.map(renderItem)}
-    </ScrollView>
+        {balanceData.map(renderItem)}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
