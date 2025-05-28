@@ -5,19 +5,28 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  StyleSheet,
+StyleSheet,
   Modal,
   FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
+interface Person {
+  id: string;
+  name: string;
+}
 import { useTheme } from '../context/ThemeContext';
-import { useDataContext, DebtItem } from '../context/DataContext';
+import { useDataContext } from '../context/DataContext';
 import { colors } from '../theme/colors';
 import styles from './AddExpenseScreen.styles';
 
 type SplitType = 'equal' | 'amount' | 'percentage' | 'shares';
 
-interface Participant extends DebtItem {
+interface Participant {
+  id: string;
+  amount: number;
+  name: string;
+  avatar: string;
   splitType: SplitType;
   value: number; // amount, percentage, or shares depending on splitType
   share: number; // final calculated amount
@@ -32,10 +41,29 @@ interface AddExpenseScreenProps {
   };
 }
 
+import { API_HOSTNAME } from '../constants';
+
 export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) => {
   const { isDark } = useTheme();
-  const { currentUser, people } = useDataContext();
+  const { currentUser } = useDataContext();
   const theme = isDark ? colors.dark : colors.light;
+
+  const [people, setPeople] = useState<Person[]>([]);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const response = await fetch(`${API_HOSTNAME}/api/friendsGet?id=${currentUser.id}`);
+        const data = await response.json();
+        setPeople(data);
+      } catch (error) {
+        console.error('Error fetching friends:', error);
+        // Handle error appropriately, e.g., show an error message to the user
+      }
+    };
+
+    fetchFriends();
+  }, [currentUser.id]);
 
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
@@ -52,7 +80,10 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
     } else {
       
       const currentParticipant: Participant = {
-        ...currentUser,
+        id: currentUser.id,
+        amount: 0, // Add a default value for amount
+        name: currentUser.name,
+        avatar: currentUser.avatar,
         splitType: selectedSplitType,
         value: 1,
         share: initialAmount
@@ -171,7 +202,7 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
     setParticipants(updatedParticipants);
   };
 
-  const handleSelectParticipant = (item: DebtItem) => {
+  const handleSelectParticipant = (item: Person) => {
     if (participants.some(p => p.id === item.id)) {
       setIsSelectModalVisible(false);
       return;
@@ -184,7 +215,9 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
              selectedSplitType === 'shares' ? 1 :
              selectedSplitType === 'amount' ? (parseFloat(amount) || 0) / (participants.length + 1) :
              1,
-      share: 0
+      share: 0,
+      amount: 0,
+      avatar: item.name.substring(0, 2).toUpperCase()
     };
 
     const newParticipants = [...participants, newParticipant];
@@ -375,7 +408,7 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
     </View>
   );
 
-  const renderSelectableItem = (item: DebtItem) => {
+  const renderSelectableItem = (item: Person) => {
     const isSelected = participants.some(p => p.id === item.id);
     
     return (
@@ -391,7 +424,7 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
         <View style={styles.participantInfo}>
           <View style={[styles.avatar, { backgroundColor: colors.paleGreen }]}>
             <Text style={{ color: isDark ? theme.surface : colors.light.surface }}>
-              {item.avatar || item.name[0]}
+              {item.name.substring(0, 2).toUpperCase()|| item.name[0]}
             </Text>
           </View>
           <View style={styles.participantDetails}>
