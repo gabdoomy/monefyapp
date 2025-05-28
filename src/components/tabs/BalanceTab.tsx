@@ -85,7 +85,7 @@ export const BalanceTab = ({ navigation }: BalanceTabProps) => {
             styles.listItemAmount,
             { color: item.amount >= 0 ? colors.paleGreen : colors.error }
           ]}>
-            {item.amount >= 0 ? `+$${item.amount.toFixed(2)}` : `-$${Math.abs(item.amount).toFixed(2)}`}
+            {item.amount >= 0 ? `+£${item.amount.toFixed(2)}` : `-£${Math.abs(item.amount).toFixed(2)}`}
           </Text>
         </View>
       </View>
@@ -115,7 +115,7 @@ export const BalanceTab = ({ navigation }: BalanceTabProps) => {
           styles.totalAmount,
           { color: totalBalance >= 0 ? colors.paleGreen : colors.error }
         ]}>
-          {totalBalance >= 0 ? `+$${totalBalance.toFixed(2)}` : `-$${Math.abs(totalBalance).toFixed(2)}`}
+          {totalBalance >= 0 ? `+£${totalBalance.toFixed(2)}` : `-£${Math.abs(totalBalance).toFixed(2)}`}
         </Text>
       </View>
 

@@ -13,9 +13,9 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const systemColorScheme = useColorScheme();
-  const [theme, setTheme] = useState<Theme>('system');
+  const [theme, setTheme] = useState<Theme>('light');
 
-  const isDark = theme === 'system' 
+  const isDark = theme === 'system'
     ? systemColorScheme === 'dark'
     : theme === 'dark';
 
@@ -36,4 +36,4 @@ export const useTheme = () => {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
-}; 
+};

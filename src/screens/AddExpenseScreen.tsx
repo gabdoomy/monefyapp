@@ -304,7 +304,7 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
     if (totalError) {
       return {
         icon: 'alert-circle-outline',
-        message: `Split amounts don't match the total sum of $${parseFloat(amount).toFixed(2)}`,
+        message: `Split amounts don't match the total sum of £${parseFloat(amount).toFixed(2)}`,
         isError: true
       };
     }
@@ -407,7 +407,7 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
             {participant.name}
           </Text>
           <Text style={[styles.participantSubtitle, { color: theme.secondaryText }]}>
-            ${participant.share.toFixed(2)}
+            £{participant.share.toFixed(2)}
           </Text>
         </View>
       </View>
@@ -421,7 +421,7 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
             placeholder={
               selectedSplitType === 'percentage' ? '%' :
               selectedSplitType === 'shares' ? 'shares' :
-              '$'
+              '£'
             }
             placeholderTextColor={theme.secondaryText}
           />
@@ -497,7 +497,7 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
 
       <ScrollView style={styles.content}>
         <View style={[styles.amountContainer, { backgroundColor: theme.surface }]}>
-          <Text style={[styles.currencySymbol, { color: theme.text }]}>$</Text>
+          <Text style={[styles.currencySymbol, { color: theme.text }]}>£</Text>
           <TextInput
             style={[styles.amountInput, { color: theme.text }]}
             value={amount}
@@ -565,7 +565,7 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
               </Text>
             ) : (
               <Text style={[styles.sectionSubtitle, { color: theme.secondaryText }]}>
-                Total: ${parseFloat(amount).toFixed(2)}
+                Total: £{parseFloat(amount).toFixed(2)}
               </Text>
             )}
           </View>

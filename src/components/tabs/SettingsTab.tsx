@@ -41,7 +41,7 @@ export const SettingsTab = () => {
           isToggled: isDark,
           onToggle: (value) => setTheme(value ? 'dark' : 'light')
         },
-        { icon: 'cash', label: 'Currency', value: 'USD' },
+        { icon: 'cash', label: 'Currency', value: 'GBP' },
       ],
     },
     {
