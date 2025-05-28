@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../context/ThemeContext';
@@ -7,6 +7,7 @@ import { StyleSheet } from 'react-native';
 import styles from './styles/BalanceTab.styles';
 import { useDataContext } from '../../context/DataContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 
 const API_HOSTNAME = 'https://monefy-server.vercel.app';
 
@@ -31,18 +32,24 @@ export const BalanceTab = ({ navigation }: BalanceTabProps) => {
   const { userId } = useDataContext();
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${API_HOSTNAME}/api/getBalance?id=${userId}`);
-        const data = await response.json();
-        setBalanceData(data.balance);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
     fetchData();
   }, []);
+
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_HOSTNAME}/api/getBalance?id=${userId}`);
+      const data = await response.json();
+      setBalanceData(data.balance);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }, [userId]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+    }, [fetchData])
+  );
 
   const totalBalance = balanceData.reduce((sum, item) => sum + item.amount, 0);
 
