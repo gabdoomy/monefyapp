@@ -26,7 +26,7 @@ interface DataContextType {
 
 const initialData: DataContextType = {
   currentUser: {
-    id: 'current-user',
+    id: 'DesRD8_0jGcnao5B6c2Sg',
     name: 'You',
     amount: 0,
     avatar: generateAvatar('You'),
@@ -52,7 +52,13 @@ const initialData: DataContextType = {
 
 const DataContext = createContext<DataContextType>(initialData);
 
-export const useData = () => useContext(DataContext);
+export const useDataContext = () => {
+  const data = useContext(DataContext);
+  return {
+    ...data,
+    userId: data.currentUser.id,
+  };
+};
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [data] = useState<DataContextType>(initialData);

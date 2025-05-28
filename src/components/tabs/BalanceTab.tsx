@@ -5,53 +5,51 @@ import { useTheme } from '../../context/ThemeContext';
 import { colors } from '../../theme/colors';
 import { StyleSheet } from 'react-native';
 import styles from './styles/BalanceTab.styles';
+import { useDataContext } from '../../context/DataContext';
+
+const API_HOSTNAME = 'https://monefy-server.vercel.app';
 
 interface DebtItem {
-  id: string;
-  name: string;
+  user: string;
   amount: number;
-  avatar?: string;
-  lastActivity?: string;
+  id: string;
+  email: string;
+  name: string;
+  lastLogged: number;
+  phoneNumber: string;
 }
 
 interface BalanceTabProps {
   navigation: any;
 }
 
-const mockData: DebtItem[] = [
-  { 
-    id: '1',
-    name: 'John Doe',
-    amount: -15.75,
-    avatar: 'JD',
-    lastActivity: '2 days ago'
-  },
-  { 
-    id: '2',
-    name: 'Sarah Smith',
-    amount: 45.00,
-    avatar: 'SS',
-    lastActivity: 'Today'
-  },
-  {
-    id: '3',
-    name: 'Mike Johnson',
-    amount: 25.50,
-    avatar: 'MJ',
-    lastActivity: 'Yesterday'
-  }
-];
-
 export const BalanceTab = ({ navigation }: BalanceTabProps) => {
   const { isDark } = useTheme();
   const theme = isDark ? colors.dark : colors.light;
-  const totalBalance = mockData.reduce((sum, item) => sum + item.amount, 0);
+  const [balanceData, setBalanceData] = React.useState<DebtItem[]>([]);
+  const { userId } = useDataContext();
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${API_HOSTNAME}/api/getBalance?id=${userId}`);
+        const data = await response.json();
+        setBalanceData(data.balance);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const totalBalance = balanceData.reduce((sum, item) => sum + item.amount, 0);
 
   const handleItemPress = (item: DebtItem) => {
     navigation.navigate('TransactionDetails', {
-      id: item.id,
+      id: item.user,
       name: item.name,
-      avatar: item.avatar
+      avatar: item.name.substring(0, 2).toUpperCase()
     });
   };
 
@@ -61,7 +59,7 @@ export const BalanceTab = ({ navigation }: BalanceTabProps) => {
 
   const renderItem = (item: DebtItem) => (
     <TouchableOpacity
-      key={item.id}
+      key={item.user}
       style={[
         styles.listItem,
         { backgroundColor: theme.surface }
@@ -72,15 +70,12 @@ export const BalanceTab = ({ navigation }: BalanceTabProps) => {
         <View style={styles.listItemLeft}>
           <View style={[styles.avatar, { backgroundColor: colors.paleGreen }]}>
             <Text style={{ color: isDark ? theme.surface : colors.light.surface }}>
-              {item.avatar}
+              {item.name.substring(0, 2).toUpperCase()}
             </Text>
           </View>
           <View style={styles.listItemTextContainer}>
             <Text style={[styles.listItemLabel, { color: theme.text }]}>
               {item.name}
-            </Text>
-            <Text style={[styles.listItemSubtitle, { color: theme.secondaryText }]}>
-              Last activity: {item.lastActivity}
             </Text>
           </View>
         </View>
@@ -124,7 +119,7 @@ export const BalanceTab = ({ navigation }: BalanceTabProps) => {
         </Text>
       </View>
 
-      {mockData.map(renderItem)}
+      {balanceData.map(renderItem)}
     </ScrollView>
   );
 };
