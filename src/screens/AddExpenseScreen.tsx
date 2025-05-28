@@ -255,9 +255,10 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
     const participantsArray = participants.map(p => ({ id: p.id }));
     const howMuchEachParticipantNeedsToPay: {[key: string]: number} = participants.reduce((obj, p) => {
       // @ts-ignore
-      obj[p.id] = p.amount;
+      obj[p.id] = p.share;
       return obj;
     }, {});
+    console.log(howMuchEachParticipantNeedsToPay)
 
     const transactionData = {
       "participants": participantsArray,

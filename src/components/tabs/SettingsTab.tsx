@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, ScrollView, Switch, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../context/ThemeContext';
+import { useDataContext } from '../../context/DataContext';
 import { styles } from './styles/SettingsTab.styles';
 import { colors } from '../../theme/colors';
 
@@ -20,14 +21,15 @@ interface SettingsSection {
 
 export const SettingsTab = () => {
   const { theme: themeMode, setTheme, isDark } = useTheme();
+  const { currentUser } = useDataContext();
   const theme = isDark ? colors.dark : colors.light;
 
   const settingsSections: SettingsSection[] = [
     {
       title: 'Account',
       items: [
-        { icon: 'person', label: 'Profile', value: 'John Doe' },
-        { icon: 'mail', label: 'Email', value: 'john@example.com' },
+        { icon: 'person', label: 'Profile', value: currentUser.name },
+        { icon: 'mail', label: 'Email', value: currentUser.email },
         { icon: 'notifications', label: 'Notifications' },
       ],
     },
