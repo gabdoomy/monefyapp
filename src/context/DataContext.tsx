@@ -4,9 +4,20 @@ export interface DebtItem {
   id: string;
   name: string;
   amount: number;
-  avatar?: string;
+  avatar: string;
   lastActivity?: string;
 }
+
+const generateAvatar = (name: string): string => {
+  const nameParts = name.split(' ');
+  let avatar = '';
+  if (nameParts.length === 1) {
+    avatar = nameParts[0].substring(0, 2).toUpperCase();
+  } else {
+    avatar = (nameParts[0].substring(0, 1) + nameParts[nameParts.length - 1].substring(0, 1)).toUpperCase();
+  }
+  return avatar;
+};
 
 interface DataContextType {
   currentUser: DebtItem;
@@ -18,7 +29,7 @@ const initialData: DataContextType = {
     id: 'current-user',
     name: 'You',
     amount: 0,
-    avatar: '👤',
+    avatar: generateAvatar('You'),
     lastActivity: 'Now'
   },
   people: [
@@ -26,14 +37,14 @@ const initialData: DataContextType = {
       id: '3',
       name: 'John Doe',
       amount: -15.75,
-      avatar: 'JD',
+      avatar: generateAvatar('John Doe'),
       lastActivity: '2 days ago'
     },
     { 
       id: '4',
       name: 'Sarah Smith',
       amount: 45.00,
-      avatar: 'SS',
+      avatar: generateAvatar('Sarah Smith'),
       lastActivity: 'Today'
     },
   ]
@@ -51,4 +62,4 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {children}
     </DataContext.Provider>
   );
-}; 
+};
