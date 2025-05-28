@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState } from 'react';
 
-export interface DebtItem {
+interface Person {
   id: string;
   name: string;
+  email: string;
   amount: number;
   avatar: string;
   lastActivity?: string;
@@ -20,34 +21,18 @@ const generateAvatar = (name: string): string => {
 };
 
 interface DataContextType {
-  currentUser: DebtItem;
-  people: DebtItem[];
+  currentUser: Person;
 }
 
 const initialData: DataContextType = {
   currentUser: {
     id: 'DesRD8_0jGcnao5B6c2Sg',
-    name: 'You',
+    name: 'Joe Doe',
+    email: "joe.doe@gmail.com",
     amount: 0,
     avatar: generateAvatar('You'),
     lastActivity: 'Now'
-  },
-  people: [
-    { 
-      id: '3',
-      name: 'John Doe',
-      amount: -15.75,
-      avatar: generateAvatar('John Doe'),
-      lastActivity: '2 days ago'
-    },
-    { 
-      id: '4',
-      name: 'Sarah Smith',
-      amount: 45.00,
-      avatar: generateAvatar('Sarah Smith'),
-      lastActivity: 'Today'
-    },
-  ]
+  }
 };
 
 const DataContext = createContext<DataContextType>(initialData);
