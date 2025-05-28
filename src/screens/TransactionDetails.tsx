@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import { colors } from '../theme/colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useDataContext } from '../context/DataContext';
 import styles from './TransactionDetails.styles';
+import { API_HOSTNAME } from '../constants';
 
 interface Transaction {
   id: string;
@@ -25,36 +26,27 @@ interface TransactionDetailsProps {
   navigation: any;
 }
 
-const mockTransactions: Transaction[] = [
-  {
-    id: '1',
-    amount: 25.50,
-    description: 'Lunch at Subway',
-    date: '2024-03-15',
-    type: 'payment'
-  },
-  {
-    id: '2',
-    amount: -15.75,
-    description: 'Coffee and snacks',
-    date: '2024-03-14',
-    type: 'request'
-  },
-  {
-    id: '3',
-    amount: 120.00,
-    description: 'Movie tickets',
-    date: '2024-03-10',
-    type: 'payment'
-  }
-];
-
 export const TransactionDetails = ({ route, navigation }: TransactionDetailsProps) => {
   const { isDark } = useTheme();
   const { currentUser } = useDataContext();
   const theme = isDark ? colors.dark : colors.light;
   const { name, avatar } = route.params;
-  const [transactions, setTransactions] = useState<Transaction[]>(mockTransactions);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const response = await fetch(`${API_HOSTNAME}/api/getTransactionsBetweenUsers?id1=${currentUser.id}&id2=${route.params.id}`);
+        const data = await response.json();
+        setTransactions(data.transactions);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+        // Handle error appropriately, e.g., show an error message to the user
+      }
+    };
+
+    fetchTransactions();
+  }, [currentUser.id, route.params.id]);
 
   const totalBalance = transactions.reduce((sum, t) => sum + t.amount, 0);
 
