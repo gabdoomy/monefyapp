@@ -263,7 +263,8 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
       "participants": participantsArray,
       "howMuchEachParticipantNeedsToPay": howMuchEachParticipantNeedsToPay,
       "whoPaidTheTotalSum": payerId,
-      "totalSumPaid": parseFloat(amount)
+      "totalSumPaid": parseFloat(amount),
+      "description": description
     };
 
     fetch(`${API_HOSTNAME}/api/createTransaction`, {
@@ -594,7 +595,6 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
             <Text style={[styles.sectionTitle, { color: theme.text }]}>Who paid?</Text>
             <Picker
               selectedValue={payerId}
-              style={{ color: theme.text }}
               onValueChange={(itemValue) => setPayerId(itemValue)}
             >
               {participants.map((participant) => (

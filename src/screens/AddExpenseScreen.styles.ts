@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   payerSelector: {
-   marginTop: 12,
+    marginTop: 12,
     marginHorizontal: 16,
     padding: 16,
     borderRadius: 12,
