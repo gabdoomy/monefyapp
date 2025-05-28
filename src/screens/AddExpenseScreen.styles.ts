@@ -234,6 +234,11 @@ const styles = StyleSheet.create({
     padding: 8,
     marginLeft: 8,
   },
+  payerSelector: {
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
 });
 
 export default styles;

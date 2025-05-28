@@ -10,6 +10,7 @@ StyleSheet,
   FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Picker } from '@react-native-picker/picker';
 
 interface Person {
   id: string;
@@ -49,6 +50,7 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
   const theme = isDark ? colors.dark : colors.light;
 
   const [people, setPeople] = useState<Person[]>([]);
+  const [payerId, setPayerId] = useState<string>(currentUser.id);
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -251,15 +253,16 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
     }
 
     const participantsArray = participants.map(p => ({ id: p.id }));
-    const howMuchEachParticipantNeedsToPay = participants.reduce((obj, p) => {
-      obj[p.id] = p.share;
+    const howMuchEachParticipantNeedsToPay: {[key: string]: number} = participants.reduce((obj, p) => {
+      // @ts-ignore
+      obj[p.id] = p.amount;
       return obj;
     }, {});
 
     const transactionData = {
       "participants": participantsArray,
       "howMuchEachParticipantNeedsToPay": howMuchEachParticipantNeedsToPay,
-      "whoPaidTheTotalSum": currentUser.id,
+      "whoPaidTheTotalSum": payerId,
       "totalSumPaid": parseFloat(amount)
     };
 
@@ -565,6 +568,18 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
             )}
           </View>
           {participants.map(renderParticipant)}
+          <View style={[styles.payerSelector, { backgroundColor: theme.surface, marginTop: 10 }]}>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>Who paid?</Text>
+            <Picker
+              selectedValue={payerId}
+              style={{ color: theme.text }}
+              onValueChange={(itemValue) => setPayerId(itemValue)}
+            >
+              {participants.map((participant) => (
+                <Picker.Item key={participant.id} label={participant.name} value={participant.id} />
+              ))}
+            </Picker>
+          </View>
           <TouchableOpacity
             style={[
               styles.addParticipantButton,
