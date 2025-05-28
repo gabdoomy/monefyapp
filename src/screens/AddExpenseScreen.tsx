@@ -106,7 +106,7 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
                parseFloat(amount) / participants.length
       }));
       const recalculatedParticipants = calculateShares(updatedParticipants);
-      setParticipants(recalculatedParticipants);
+      setParticipants(updatedParticipants);
     }
   }, [selectedSplitType]);
 
@@ -568,18 +568,7 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
             )}
           </View>
           {participants.map(renderParticipant)}
-          <View style={[styles.payerSelector, { backgroundColor: theme.surface, marginTop: 10 }]}>
-            <Text style={[styles.sectionTitle, { color: theme.text }]}>Who paid?</Text>
-            <Picker
-              selectedValue={payerId}
-              style={{ color: theme.text }}
-              onValueChange={(itemValue) => setPayerId(itemValue)}
-            >
-              {participants.map((participant) => (
-                <Picker.Item key={participant.id} label={participant.name} value={participant.id} />
-              ))}
-            </Picker>
-          </View>
+          
           <TouchableOpacity
             style={[
               styles.addParticipantButton,
@@ -600,7 +589,19 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
               Add person
             </Text>
           </TouchableOpacity>
-        </View>
+          </View>
+          <View style={[styles.payerSelector, { backgroundColor: theme.surface, marginTop: 10 }]}>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>Who paid?</Text>
+            <Picker
+              selectedValue={payerId}
+              style={{ color: theme.text }}
+              onValueChange={(itemValue) => setPayerId(itemValue)}
+            >
+              {participants.map((participant) => (
+                <Picker.Item key={participant.id} label={participant.name} value={participant.id} />
+              ))}
+            </Picker>
+          </View>
 
         <View style={[styles.inputContainer, { backgroundColor: theme.surface }]}>
           <View style={styles.descriptionHeader}>
