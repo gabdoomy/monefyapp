@@ -240,6 +240,17 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
   },
+  payerButton: {
+    padding: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    alignItems: 'center',
+  },
+  payerButtonText: {
+    fontSize: 17,
+    fontWeight: '600',
+  },
 });
 
 export default styles;

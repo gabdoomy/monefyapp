@@ -10,7 +10,6 @@ StyleSheet,
   FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Picker } from '@react-native-picker/picker';
 
 interface Person {
   id: string;
@@ -71,6 +70,7 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
   const [description, setDescription] = useState('');
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [isSelectModalVisible, setIsSelectModalVisible] = useState(false);
+  const [isPayerModalVisible, setIsPayerModalVisible] = useState(false);
   const [totalError, setTotalError] = useState(false);
   const [selectedSplitType, setSelectedSplitType] = useState<SplitType>('equal');
 
@@ -595,14 +595,14 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
           </View>
           <View style={[styles.payerSelector, { backgroundColor: theme.surface, marginTop: 10 }]}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>Who paid?</Text>
-            <Picker
-              selectedValue={payerId}
-              onValueChange={(itemValue) => setPayerId(itemValue)}
+            <TouchableOpacity
+              style={styles.payerButton}
+              onPress={() => setIsPayerModalVisible(true)}
             >
-              {participants.map((participant) => (
-                <Picker.Item key={participant.id} label={participant.name} value={participant.id} />
-              ))}
-            </Picker>
+              <Text style={[styles.payerButtonText, { color: theme.text }]}>
+                {participants.find(p => p.id === payerId)?.name || 'Select Payer'}
+              </Text>
+            </TouchableOpacity>
           </View>
 
         <View style={[styles.inputContainer, { backgroundColor: theme.surface }]}>
@@ -643,6 +643,62 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
           <FlatList
             data={people.filter(p => !participants.some(part => part.id === p.id))}
             renderItem={({ item }) => renderSelectableItem(item)}
+            keyExtractor={item => item.id}
+            style={styles.modalList}
+          />
+        </View>
+      </Modal>
+
+      <Modal
+        visible={isPayerModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setIsPayerModalVisible(false)}
+      >
+        <View style={[styles.modalContainer, { backgroundColor: theme.background }]}>
+          <View style={[styles.modalHeader, { backgroundColor: theme.surface }]}>
+            <TouchableOpacity onPress={() => setIsPayerModalVisible(false)}>
+              <Icon name="close" size={24} color={theme.text} />
+            </TouchableOpacity>
+            <Text style={[styles.modalTitle, { color: theme.text }]}>
+              Select Payer
+            </Text>
+            <View style={{ width: 24 }} />
+          </View>
+          <FlatList
+            data={participants}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={[
+                  styles.selectableItem,
+                  { backgroundColor: theme.surface },
+                  item.id === payerId && styles.selectedItem
+                ]}
+                onPress={() => {
+                  setPayerId(item.id);
+                  setIsPayerModalVisible(false);
+                }}
+              >
+                <View style={styles.participantInfo}>
+                  <View style={[styles.avatar, { backgroundColor: colors.paleGreen }]}>
+                    <Text style={{ color: isDark ? theme.surface : colors.light.surface }}>
+                      {item.avatar || item.name[0]}
+                    </Text>
+                  </View>
+                  <View style={styles.participantDetails}>
+                    <Text style={[
+                      styles.participantName,
+                      { color: item.id === payerId ? theme.secondaryText : theme.text }
+                    ]}>
+                      {item.name}
+                    </Text>
+                  </View>
+                </View>
+                {item.id === payerId && (
+                  <Icon name="checkmark-circle" size={24} color={colors.paleGreen} />
+                )}
+              </TouchableOpacity>
+            )}
             keyExtractor={item => item.id}
             style={styles.modalList}
           />
