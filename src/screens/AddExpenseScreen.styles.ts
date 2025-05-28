@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../theme/colors';
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
   amountInput: {
     flex: 1,
     fontSize: 42,
-    fontWeight: '500',
+    fontWeight: '600',
     height: 64,
   },
   splitTypeSelector: {
@@ -235,3 +235,5 @@ export const styles = StyleSheet.create({
     marginLeft: 8,
   },
 });
+
+export default styles;
