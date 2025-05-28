@@ -250,9 +250,34 @@ export const AddExpenseScreen = ({ navigation, route }: AddExpenseScreenProps) =
       return;
     }
 
-    // TODO: Save expense and navigate back
-    console.log('Save expense');
-    navigation.goBack();
+    const participantsArray = participants.map(p => ({ id: p.id }));
+    const howMuchEachParticipantNeedsToPay = participants.reduce((obj, p) => {
+      obj[p.id] = p.share;
+      return obj;
+    }, {});
+
+    const transactionData = {
+      "participants": participantsArray,
+      "howMuchEachParticipantNeedsToPay": howMuchEachParticipantNeedsToPay,
+      "whoPaidTheTotalSum": currentUser.id,
+      "totalSumPaid": parseFloat(amount)
+    };
+
+    fetch(`${API_HOSTNAME}/api/createTransaction`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(transactionData),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      navigation.goBack();
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
   };
 
   const canSave = () => {
