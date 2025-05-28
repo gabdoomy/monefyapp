@@ -11,8 +11,12 @@ interface Transaction {
   id: string;
   amount: number;
   description: string;
-  timestamp: string;
+  timestamp: number;
   type: 'payment' | 'request';
+  participants: { id: string }[];
+  howMuchEachParticipantNeedsToPay: { [id: string]: number };
+  whoPaidTheTotalSum: string;
+  totalSumPaid: number;
 }
 
 interface TransactionDetailsProps {
@@ -48,7 +52,11 @@ export const TransactionDetails = ({ route, navigation }: TransactionDetailsProp
     fetchTransactions();
   }, [currentUser.id, route.params.id]);
 
-  const totalBalance = transactions.reduce((sum, t) => sum + t.amount, 0);
+  const totalBalance = transactions.reduce((sum, t) => {
+    const currentUserShare = t.howMuchEachParticipantNeedsToPay[currentUser.id] || 0;
+    const amountPaid = t.whoPaidTheTotalSum === currentUser.id ? t.totalSumPaid : 0;
+    return sum + (amountPaid - currentUserShare);
+  }, 0);
 
   const handleAddTransaction = () => {
     navigation.navigate('AddExpense', {
@@ -75,8 +83,8 @@ export const TransactionDetails = ({ route, navigation }: TransactionDetailsProp
     setTransactions(prev => prev.filter(t => t.id !== transactionId));
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDate = (timestamp: number) => {
+    const date = new Date(timestamp);
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -141,41 +149,47 @@ export const TransactionDetails = ({ route, navigation }: TransactionDetailsProp
         </View>
 
         <ScrollView style={styles.transactionsList}>
-          {transactions.map((transaction, index) => (
-            <TouchableOpacity
-              key={transaction.id}
-              style={[
-                styles.transactionItem,
-                { backgroundColor: theme.surface },
-                index < transactions.length - 1 && styles.transactionBorder,
-                { borderBottomColor: theme.border }
-              ]}
-              onLongPress={() => handleDeleteTransaction(transaction.id)}
-            >
-              <View style={styles.transactionLeft}>
-                <Icon 
-                  name={transaction.type === 'payment' ? 'arrow-up' : 'arrow-down'} 
-                  size={20} 
-                  color={transaction.type === 'payment' ? colors.paleGreen : colors.error}
-                  style={styles.transactionIcon}
-                />
-                <View>
-                  <Text style={[styles.transactionDescription, { color: theme.text }]}>
-                    {transaction.description}
-                  </Text>
-                  <Text style={[styles.transactionDate, { color: theme.secondaryText }]}>
-                    {formatDate(transaction.timestamp)}
-                  </Text>
+          {transactions.map((transaction, index) => {
+            const currentUserShare = transaction.howMuchEachParticipantNeedsToPay[currentUser.id] || 0;
+            const amountPaid = transaction.whoPaidTheTotalSum === currentUser.id ? transaction.totalSumPaid : 0;
+            const amount = amountPaid - currentUserShare;
+
+            return (
+              <TouchableOpacity
+                key={transaction.id}
+                style={[
+                  styles.transactionItem,
+                  { backgroundColor: theme.surface },
+                  index < transactions.length - 1 && styles.transactionBorder,
+                  { borderBottomColor: theme.border }
+                ]}
+                onLongPress={() => handleDeleteTransaction(transaction.id)}
+              >
+                <View style={styles.transactionLeft}>
+                  <Icon
+                    name={transaction.type === 'payment' ? 'arrow-up' : 'arrow-down'}
+                    size={20}
+                    color={transaction.type === 'payment' ? colors.paleGreen : colors.error}
+                    style={styles.transactionIcon}
+                  />
+                  <View>
+                    <Text style={[styles.transactionDescription, { color: theme.text }]}>
+                      {transaction.description}
+                    </Text>
+                    <Text style={[styles.transactionDate, { color: theme.secondaryText }]}>
+                      {formatDate(transaction.timestamp)}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-              <Text style={[
-                styles.transactionAmount,
-                { color: transaction.amount >= 0 ? colors.paleGreen : colors.error }
-              ]}>
-                {transaction.amount >= 0 ? '+' : '-'}£{Math.abs(transaction.amount).toFixed(2)}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text style={[
+                  styles.transactionAmount,
+                  { color: amount >= 0 ? colors.paleGreen : colors.error }
+                ]}>
+                  {amount >= 0 ? '+' : '-'}£{Math.abs(amount).toFixed(2)}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </ScrollView>
       </View>
     </View>

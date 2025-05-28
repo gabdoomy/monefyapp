@@ -121,7 +121,9 @@ export const BalanceTab = ({ navigation }: BalanceTabProps) => {
           </Text>
         </View>
 
-        {balanceData.map(renderItem)}
+        {balanceData
+          .filter(item => item.amount !== 0)
+          .map(renderItem)}
       </ScrollView>
     </SafeAreaView>
   );
