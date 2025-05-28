@@ -126,7 +126,7 @@ export const TransactionDetails = ({ route, navigation }: TransactionDetailsProp
           styles.balanceAmount,
           { color: totalBalance >= 0 ? colors.paleGreen : colors.error }
         ]}>
-          £{Math.abs(totalBalance).toFixed(2)}
+          ${Math.abs(totalBalance).toFixed(2)}
         </Text>
         <Text style={[styles.balanceSubtitle, { color: theme.secondaryText }]}>
           {totalBalance >= 0 ? 'They owe you' : 'You owe them'}
@@ -177,7 +177,7 @@ export const TransactionDetails = ({ route, navigation }: TransactionDetailsProp
                 styles.transactionAmount,
                 { color: transaction.amount >= 0 ? colors.paleGreen : colors.error }
               ]}>
-                {transaction.amount >= 0 ? '+' : '-'}£{Math.abs(transaction.amount).toFixed(2)}
+                {transaction.amount >= 0 ? '+' : '-'}${Math.abs(transaction.amount).toFixed(2)}
               </Text>
             </TouchableOpacity>
           ))}
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   },
   balanceAmount: {
     fontSize: 34,
-    fontWeight: '500',
+    fontWeight: 'bold',
     marginBottom: 4,
   },
   balanceSubtitle: {
@@ -283,6 +283,6 @@ const styles = StyleSheet.create({
   },
   transactionAmount: {
     fontSize: 17,
-    fontWeight: '500',
+    fontWeight: '600',
   },
-});
+}); 

@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'left',
     marginBottom: 32,
+    marginTop: 16,
   },
   section: {
     marginBottom: 32,
@@ -61,4 +62,4 @@ export const styles = StyleSheet.create({
     fontSize: 17,
     marginRight: 6,
   },
-});
+}); 

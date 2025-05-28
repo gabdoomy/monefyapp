@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, ScrollView, Switch, Text, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../context/ThemeContext';
 import { styles } from './styles/SettingsTab.styles';
@@ -42,7 +41,7 @@ export const SettingsTab = () => {
           isToggled: isDark,
           onToggle: (value) => setTheme(value ? 'dark' : 'light')
         },
-        { icon: 'cash', label: 'Currency', value: 'GBP' },
+        { icon: 'cash', label: 'Currency', value: 'USD' },
       ],
     },
     {
@@ -115,24 +114,22 @@ export const SettingsTab = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <ScrollView>
-        <Text style={[styles.title, { color: theme.text }]}>
-          Settings
-        </Text>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+      <Text style={[styles.title, { color: theme.text }]}>
+        Settings
+      </Text>
 
-        {settingsSections.map((section) => (
-          <View key={section.title} style={styles.section}>
-            <Text style={[styles.sectionTitle, { color: theme.secondaryText }]}>
-              {section.title}
-            </Text>
+      {settingsSections.map((section) => (
+        <View key={section.title} style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: theme.secondaryText }]}>
+            {section.title}
+          </Text>
 
-            <View style={[styles.sectionContainer, { backgroundColor: theme.surface }]}>
-              {section.items.map((item, index) => renderItem(item, index, section.items.length))}
-            </View>
+          <View style={[styles.sectionContainer, { backgroundColor: theme.surface }]}>
+            {section.items.map((item, index) => renderItem(item, index, section.items.length))}
           </View>
-        ))}
-      </ScrollView>
-    </SafeAreaView>
+        </View>
+      ))}
+    </ScrollView>
   );
-};
+}; 

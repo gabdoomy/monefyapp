@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../context/ThemeContext';
 import { colors } from '../../theme/colors';
@@ -91,7 +90,7 @@ export const BalanceTab = ({ navigation }: BalanceTabProps) => {
             styles.listItemAmount,
             { color: item.amount >= 0 ? colors.paleGreen : colors.error }
           ]}>
-            {item.amount >= 0 ? `+£${item.amount.toFixed(2)}` : `-$${Math.abs(item.amount).toFixed(2)}`}
+            {item.amount >= 0 ? `+$${item.amount.toFixed(2)}` : `-$${Math.abs(item.amount).toFixed(2)}`}
           </Text>
         </View>
       </View>
@@ -99,35 +98,33 @@ export const BalanceTab = ({ navigation }: BalanceTabProps) => {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <ScrollView>
-        <View style={styles.header}>
-          <View>
-            <Text style={[styles.title, { color: theme.text }]}>Monefy</Text>
-            <Text style={[styles.subtitle, { color: theme.secondaryText }]}>Your Finances, Simplified</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={handleAddExpense}
-          >
-            <Icon name="add-circle" size={24} color={colors.paleGreen} />
-          </TouchableOpacity>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={styles.header}>
+        <View>
+          <Text style={[styles.title, { color: theme.text }]}>Monefy</Text>
+          <Text style={[styles.subtitle, { color: theme.secondaryText }]}>Your Finances, Simplified</Text>
         </View>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={handleAddExpense}
+        >
+          <Icon name="add-circle" size={24} color={colors.paleGreen} />
+        </TouchableOpacity>
+      </View>
 
-        <View style={[styles.totalCard, { backgroundColor: theme.surface }]}>
-          <Text style={[styles.totalLabel, { color: theme.secondaryText }]}>
-            Total Balance
-          </Text>
-          <Text style={[
-            styles.totalAmount,
-            { color: totalBalance >= 0 ? colors.paleGreen : colors.error }
-          ]}>
-            {totalBalance >= 0 ? `+£${totalBalance.toFixed(2)}` : `-$${Math.abs(totalBalance).toFixed(2)}`}
-          </Text>
-        </View>
+      <View style={[styles.totalCard, { backgroundColor: theme.surface }]}>
+        <Text style={[styles.totalLabel, { color: theme.secondaryText }]}>
+          Total Balance
+        </Text>
+        <Text style={[
+          styles.totalAmount,
+          { color: totalBalance >= 0 ? colors.paleGreen : colors.error }
+        ]}>
+          {totalBalance >= 0 ? `+$${totalBalance.toFixed(2)}` : `-$${Math.abs(totalBalance).toFixed(2)}`}
+        </Text>
+      </View>
 
-        {mockData.map(renderItem)}
-      </ScrollView>
-    </SafeAreaView>
+      {mockData.map(renderItem)}
+    </ScrollView>
   );
 };
