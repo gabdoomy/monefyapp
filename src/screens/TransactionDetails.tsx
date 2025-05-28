@@ -11,7 +11,7 @@ interface Transaction {
   id: string;
   amount: number;
   description: string;
-  date: string;
+  timestamp: string;
   type: 'payment' | 'request';
 }
 
@@ -80,7 +80,10 @@ export const TransactionDetails = ({ route, navigation }: TransactionDetailsProp
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric'
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
     });
   };
 
@@ -161,7 +164,7 @@ export const TransactionDetails = ({ route, navigation }: TransactionDetailsProp
                     {transaction.description}
                   </Text>
                   <Text style={[styles.transactionDate, { color: theme.secondaryText }]}>
-                    {formatDate(transaction.date)}
+                    {formatDate(transaction.timestamp)}
                   </Text>
                 </View>
               </View>
